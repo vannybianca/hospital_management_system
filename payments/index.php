@@ -2,8 +2,12 @@
 // Include your project's actual database connection file
 include '../config/database.php';
 
-// Fetch payments data from the database (Change 'payments' if your table name differs)
-$sql = "SELECT * FROM payments";
+// Fetch payments together with the patient linked through each bill.
+$sql = "SELECT pay.*, b.id AS bill_id, CONCAT(p.first_name, ' ', p.last_name) AS patient_name
+        FROM payments pay
+        JOIN bills b ON b.id = pay.bill_id
+        JOIN patients p ON p.id = b.patient_id
+        ORDER BY pay.payment_date DESC, pay.id DESC";
 $result = $conn->query($sql);
 ?>
 

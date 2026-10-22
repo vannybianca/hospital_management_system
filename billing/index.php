@@ -7,14 +7,21 @@ if (empty($_SESSION['user_id'])) {
 require_once "../config/database.php";
 
 $search = trim($_GET['search'] ?? '');
+$query = "
+    SELECT b.id, b.bill_date, b.total_amount, b.status,
+           CONCAT(p.first_name, ' ', p.last_name) AS patient_name,
+           COALESCE(SUM(pay.amount), 0) AS paid_amount
+    FROM bills b
+    JOIN patients p ON p.id = b.patient_id
+    LEFT JOIN payments pay ON pay.bill_id = b.id
+";
 
 if ($search !== '') {
     $like = "%{$search}%";
     $statement = $conn->prepare("
-        SELECT b.*, CONCAT(p.first_name, ' ', p.last_name) AS patient_name 
-        FROM bills b 
-        LEFT JOIN patients p ON b.patient_id = p.id 
-        WHERE p.first_name LIKE ? OR p.last_name LIKE ? OR b.bill_number LIKE ?
+        {$query}
+        WHERE p.first_name LIKE ? OR p.last_name LIKE ? OR CAST(b.id AS CHAR) LIKE ?
+        GROUP BY b.id, b.bill_date, b.total_amount, b.status, p.first_name, p.last_name
         ORDER BY b.id DESC
     ");
     $statement->bind_param("sss", $like, $like, $like);
@@ -22,9 +29,8 @@ if ($search !== '') {
     $result = $statement->get_result();
 } else {
     $result = $conn->query("
-        SELECT b.*, CONCAT(p.first_name, ' ', p.last_name) AS patient_name 
-        FROM bills b 
-        LEFT JOIN patients p ON b.patient_id = p.id 
+        {$query}
+        GROUP BY b.id, b.bill_date, b.total_amount, b.status, p.first_name, p.last_name
         ORDER BY b.id DESC
     ");
 }
@@ -78,14 +84,14 @@ if ($search !== '') {
                 <?php else: ?>
                     <?php while ($r = $result->fetch_assoc()): ?>
                         <tr>
-                            <td><?= htmlspecialchars($r['bill_number'] ?? $r['id']) ?></td>
+                            <td><?= htmlspecialchars($r['id']) ?></td>
                             <td><?= htmlspecialchars($r['patient_name'] ?? 'N/A') ?></td>
                             <td>$<?= number_format($r['total_amount'] ?? 0, 2) ?></td>
                             <td>$<?= number_format($r['paid_amount'] ?? 0, 2) ?></td>
                             <td>
                                 <strong><?= htmlspecialchars(strtoupper($r['status'] ?? 'PENDING')) ?></strong>
                             </td>
-                            <td><?= htmlspecialchars($r['created_at'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($r['bill_date'] ?? 'N/A') ?></td>
                             <td>
                                 <a class="button" href="view.php?id=<?= $r['id'] ?>" style="padding: 4px 8px; font-size: 0.85rem;">View</a>
                             </td>

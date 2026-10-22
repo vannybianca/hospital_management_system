@@ -2,8 +2,18 @@
 // Include your project's actual database connection file
 include '../config/database.php';
 
-// Fetch prescriptions data from the database (Change 'prescriptions' if your table name differs)
-$sql = "SELECT * FROM prescriptions";
+// Fetch prescription details through their related patient, doctor, and medicine records.
+$sql = "SELECT pr.id, pr.prescription_date,
+               CONCAT(p.first_name, ' ', p.last_name) AS patient_name,
+               CONCAT(d.first_name, ' ', d.last_name) AS doctor_name,
+               GROUP_CONCAT(CONCAT(m.medicine_name, ' (', pi.dosage, ')') SEPARATOR ', ') AS medicine_details
+        FROM prescriptions pr
+        JOIN patients p ON p.id = pr.patient_id
+        JOIN doctors d ON d.id = pr.doctor_id
+        LEFT JOIN prescription_items pi ON pi.prescription_id = pr.id
+        LEFT JOIN medicines m ON m.id = pi.medicine_id
+        GROUP BY pr.id, pr.prescription_date, p.first_name, p.last_name, d.first_name, d.last_name
+        ORDER BY pr.prescription_date DESC, pr.id DESC";
 $result = $conn->query($sql);
 ?>
 
@@ -54,9 +64,9 @@ $result = $conn->query($sql);
                     <tr>
                         <th>ID</th>
                         <th>Patient Name</th>
-                        <th>Medicine</th>
-                        <th>Dosage</th>
-                        <th>Status</th>
+                        <th>Doctor</th>
+                        <th>Medicines</th>
+                        <th>Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -66,9 +76,9 @@ $result = $conn->query($sql);
                             <tr>
                                 <td><?php echo htmlspecialchars($row['id']); ?></td>
                                 <td><?php echo htmlspecialchars($row['patient_name'] ?? ''); ?></td>
-                                <td><?php echo htmlspecialchars($row['medicine_name'] ?? ''); ?></td>
-                                <td><?php echo htmlspecialchars($row['dosage'] ?? ''); ?></td>
-                                <td><?php echo htmlspecialchars($row['status'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($row['doctor_name']); ?></td>
+                                <td><?php echo htmlspecialchars($row['medicine_details'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($row['prescription_date']); ?></td>
                                 <td>
                                     <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-primary" style="padding: 4px 10px; font-size: 12px;">Edit</a>
                                     <a href="delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger" style="padding: 4px 10px; font-size: 12px;" onclick="return confirm('Are you sure you want to delete this prescription?');">Delete</a>

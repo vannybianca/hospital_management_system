@@ -533,7 +533,7 @@ CREATE TABLE payments (
     payment_method ENUM(
         'Cash',
         'Mobile Money',
-        'Bank',
+        'Insurance',
         'Card'
     ) NOT NULL DEFAULT 'Cash',
 
