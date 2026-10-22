@@ -3,7 +3,11 @@
 include '../config/database.php';
 
 // Fetch appointments data from the database (Change 'appointments' if your table name differs)
-$sql = "SELECT * FROM appointments";
+$sql = "SELECT a.*, CONCAT(p.first_name, ' ', p.last_name) AS patient_name, CONCAT(d.first_name, ' ', d.last_name) AS doctor_name
+        FROM appointments a
+        JOIN patients p ON p.id = a.patient_id
+        JOIN doctors d ON d.id = a.doctor_id
+        ORDER BY a.appointment_date DESC, a.appointment_time DESC";
 $result = $conn->query($sql);
 ?>
 
