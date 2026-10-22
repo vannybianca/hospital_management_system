@@ -9,5 +9,5 @@ if($s->execute()){header("Location: index.php");exit;} $error=$s->error;} ?>
 <label>Patient Number</label><input name="patient_number" required><label>First Name</label><input name="first_name" required><label>Last Name</label><input name="last_name" required>
 <label>Gender</label><select name="gender" required><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select>
 <label>Date of Birth</label><input type="date" name="date_of_birth"><label>Phone</label><input name="phone"><label>Email</label><input type="email" name="email"><label>Address</label><input name="address">
-<label>Emergency Contact</label><input name="emergency_contact"><label>Emergency Phone</label><input name="emergency_phone"><label>Blood Group</label><input name="blood_group">
+<label>Emergency Contact</label><input name="emergency_contact"><label>Emergency Phone</label><input name="emergency_phone"><label>Blood Group</label><select name="blood_group"><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select>
 <button type="submit">Register Patient</button></form><a href="index.php">← Back</a></div></body></html>
