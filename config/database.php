@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username   = "root";
 $password   = "";
-$dbname     = "hospital_management";
+$dbname     = "medicore";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 

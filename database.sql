@@ -584,7 +584,7 @@ CREATE TABLE audit_logs (
 DELIMITER $$
 
 -- Trigger 1:
-   Prevent medicine quantity from becoming negative
+-- Prevent medicine quantity from becoming negative
 
 CREATE TRIGGER before_medicine_update
 BEFORE UPDATE ON medicines
@@ -602,7 +602,7 @@ BEGIN
 END$$
 
 -- Trigger 2:
-   Calculate bill total after inserting a bill item
+-- Calculate bill total after inserting a bill item
 
 CREATE TRIGGER after_bill_item_insert
 AFTER INSERT ON bill_items
@@ -623,7 +623,7 @@ BEGIN
 END$$
 
 -- Trigger 3:
-   Recalculate bill total after updating bill item
+-- Recalculate bill total after updating bill item
 
 CREATE TRIGGER after_bill_item_update
 AFTER UPDATE ON bill_items
@@ -644,7 +644,7 @@ BEGIN
 END$$
 
 -- Trigger 4:
-   Recalculate bill total after deleting bill item
+-- Recalculate bill total after deleting bill item
 
 CREATE TRIGGER after_bill_item_delete
 AFTER DELETE ON bill_items
@@ -665,7 +665,7 @@ BEGIN
 END$$
 
 -- Trigger 5:
-   Prevent payment greater than outstanding balance
+-- Prevent payment greater than outstanding balance
 
 CREATE TRIGGER before_payment_insert
 BEFORE INSERT ON payments
@@ -696,7 +696,7 @@ BEGIN
 END$$
 
 -- Trigger 6:
-   Automatically update bill payment status
+-- Automatically update bill payment status
 
 CREATE TRIGGER after_payment_insert
 AFTER INSERT ON payments
