@@ -68,7 +68,7 @@ $result = $conn->query($sql);
                                 <td><?php echo htmlspecialchars($row['medicine_name']); ?></td>
                                 <td><?php echo htmlspecialchars($row['category']); ?></td>
                                 <td><?php echo htmlspecialchars($row['quantity']); ?></td>
-                                <td><?php echo htmlspecialchars($row['price']); ?></td>
+                                <td><?php echo htmlspecialchars($row['unit_price']); ?></td>
                                 <td>
                                     <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-primary" style="padding: 4px 10px; font-size: 12px;">Edit</a>
                                     <a href="delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger" style="padding: 4px 10px; font-size: 12px;" onclick="return confirm('Are you sure you want to delete this medicine?');">Delete</a>
